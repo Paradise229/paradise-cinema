@@ -38,6 +38,12 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
 .panel input[type=range]{width:100%;accent-color:#f59e0b}
 .panel select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit}
 .panel select option{color:#111}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:14px;color:#f3f4f7}
+.trow small{color:#a2a8b6;font-size:13px}
+.sw{position:relative;flex:none;width:44px;height:24px;padding:0;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);transition:background .2s,border-color .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw[aria-checked=true]{background:var(--gold);border-color:var(--gold)}
+.sw[aria-checked=true]::after{transform:translateX(20px)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip,.seg button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);border-radius:999px;padding:5px 12px;font-size:14px;color:#f3f4f7}
 .chip[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
@@ -62,6 +68,12 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
 .ct{margin:0;font-size:15px;line-height:1.25;font-weight:700;min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .poster{aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#1b1d24;border:1px solid var(--line);transition:transform .2s,border-color .2s}
 .card:hover .poster{transform:translateY(-3px);border-color:var(--gold)}
+.poster{position:relative}
+.fav{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;font-size:20px;line-height:1;opacity:.5;transition:opacity .2s,color .2s,transform .15s}
+.fav:hover,.fav:focus-visible{opacity:1}
+.fav[aria-pressed=true]{opacity:1;color:#ff4d6d}
+.fav:active{transform:scale(.86)}
+#warm-overlay{position:fixed;inset:0;background-color:rgba(230,160,80,.10);mix-blend-mode:multiply;pointer-events:none;z-index:9999;display:none;transition:opacity .3s ease}
 .poster img{display:block;width:100%;height:100%;object-fit:cover}
 .cover{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;padding:14px;text-align:center;background:linear-gradient(160deg,#23252d,#121317);color:#f3f4f7}
 .cover b{font-size:17px;line-height:1.25}.cover i{font-style:normal;color:var(--gold);font-weight:700}
@@ -111,6 +123,7 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
   <div class="chips" id="genres"></div>
   <label for="fr">Франшиза</label>
   <select id="fr"></select>
+  <div class="trow"><span>Только избранное <small id="favCount"></small></span><button class="sw" id="favOnly" role="switch" aria-checked="false" aria-label="Только избранное"></button></div>
   <label for="minKp">Минимальный рейтинг КП: <b id="minV">0</b></label>
   <input type="range" id="minKp" min="0" max="9" step="0.5" value="0">
   <button class="link" id="reset">Сбросить фильтры</button>
@@ -120,6 +133,7 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
   <h2>Настройки</h2>
   <label>Тема оформления</label>
   <div class="seg" id="theme"><button data-t="dark">Темная</button><button data-t="light">Светлая</button></div>
+  <div class="trow"><span>Теплый фильтр (для глаз)</span><button class="sw" id="warm" role="switch" aria-checked="false" aria-label="Теплый фильтр (для глаз)"></button></div>
   <label>Недавно просмотренные</label>
   <ul class="recent" id="recent"></ul>
   <button class="link" id="clearRecent">Очистить список</button>
@@ -152,6 +166,8 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
     </div>
   </section>
 </main>
+
+<div id="warm-overlay" aria-hidden="true"></div>
 
 <script>
 /* [id, название, год, жанр, КП, IMDb, описание, франшиза или null] */
@@ -227,11 +243,11 @@ const RAW=[
 [395978,"Форсаж 4",2009,"Боевик",6.8,6.5,"Дом и Брайан снова объединяются, чтобы выйти на след опасного наркоторговца.","Форсаж"],
 [496943,"Форсаж 5",2011,"Боевик",7.4,7.3,"Команда гонщиков планирует дерзкое ограбление в Рио-де-Жанейро.","Форсаж"],
 [594736,"Форсаж 6",2013,"Боевик",7.4,7.0,"Хоббс просит команду Торетто помочь остановить международную банду наёмников.","Форсаж"],
-[754481,"Форсаж 7",2015,"Боевик",7.7,7.1,"Команда Торетто сталкивается с Декардом Шоу, мстящим за брата.","Форсаж"],
+[713452,"Форсаж 7",2015,"Боевик",7.7,7.1,"Команда Торетто сталкивается с Декардом Шоу, мстящим за брата.","Форсаж"],
 [894027,"Форсаж 8",2017,"Боевик",7.1,6.6,"Дом неожиданно предаёт семью по требованию загадочной хакерши Сайфер.","Форсаж"],
-[1044450,"Форсаж: Хоббс и Шоу",2019,"Боевик",7.1,6.4,"Агент Хоббс и наёмник Шоу вынуждены объединиться против суперсолдата Брикстона.","Форсаж"],
-[964318,"Форсаж 9",2021,"Боевик",6.6,5.2,"Дом сталкивается с младшим братом Джейкобом и новой глобальной угрозой.","Форсаж"],
-[959062,"Форсаж 10",2023,"Боевик",6.4,5.7,"Дому Торетто мстит Дантэ, сын наркобарона из Рио, и под угрозой оказывается вся семья.","Форсаж"],
+[1048334,"Форсаж: Хоббс и Шоу",2019,"Боевик",7.1,6.4,"Агент Хоббс и наёмник Шоу вынуждены объединиться против суперсолдата Брикстона.","Форсаж"],
+[969760,"Форсаж 9",2021,"Боевик",6.6,5.2,"Дом сталкивается с младшим братом Джейкобом и новой глобальной угрозой.","Форсаж"],
+[1289488,"Форсаж 10",2023,"Боевик",6.4,5.7,"Дому Торетто мстит Дантэ, сын наркобарона из Рио, и под угрозой оказывается вся семья.","Форсаж"],
 [762738,"Джон Уик",2014,"Боевик",7.4,7.4,"Бывший киллер возвращается к прежнему ремеслу, чтобы отомстить за убитую собаку и украденную машину.","Джон Уик"],
 [885658,"Джон Уик 2",2017,"Боевик",7.5,7.4,"Старый долг заставляет Джона вернуться в игру и поставить против себя весь криминальный мир.","Джон Уик"],
 [1009536,"Джон Уик 3",2019,"Боевик",7.4,7.4,"За голову Джона объявлена награда, и на него охотятся лучшие убийцы мира.","Джон Уик"],
@@ -248,7 +264,18 @@ const MOVIES=RAW.map(r=>({id:r[0],title:r[1],year:r[2],genre:r[3],kp:r[4],imdb:r
 const $=s=>document.querySelector(s);
 const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const posterUrl=id=>'https://st.kp.yandex.net/images/film_iphone/iphone360_'+id+'.jpg';
-const state={q:'',genre:'',franchise:'',min:0};
+const state={q:'',genre:'',franchise:'',min:0,fav:false};
+const FAV_KEY='paradise_favorites';
+const favs=new Set((()=>{const a=ls.get(FAV_KEY,[]);return Array.isArray(a)?a.filter(Number.isFinite):[]})());
+function updateFavCount(){$('#favCount').textContent=favs.size?'('+favs.size+')':''}
+function toggleFav(id){favs.has(id)?favs.delete(id):favs.add(id);ls.set(FAV_KEY,[...favs]);updateFavCount()}
+function makeFav(m){
+  const b=document.createElement('button');b.type='button';b.className='fav';
+  const sync=()=>{const on=favs.has(m.id);b.setAttribute('aria-pressed',String(on));b.textContent=on?'♥':'♡';b.setAttribute('aria-label',on?'Убрать из избранного':'Добавить в избранное')};
+  sync();
+  b.onclick=e=>{e.preventDefault();e.stopPropagation();toggleFav(m.id);sync();if(state.fav)renderCatalog()};
+  return b;
+}
 let savedY=0,current=null;
 
 function makeCover(m){
@@ -267,12 +294,12 @@ function makePoster(m){
 /* catalog */
 function renderCatalog(){
   const q=state.q.trim().toLowerCase();
-  const list=MOVIES.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(!state.genre||m.genre===state.genre)&&(!state.franchise||m.franchise===state.franchise)&&m.kp>=state.min);
+  const list=MOVIES.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(!state.genre||m.genre===state.genre)&&(!state.franchise||m.franchise===state.franchise)&&(!state.fav||favs.has(m.id))&&m.kp>=state.min);
   const grid=$('#grid');grid.innerHTML='';
   $('#count').textContent='Найдено фильмов: '+list.length+' из '+MOVIES.length;
   if(!list.length){
     grid.style.display='block';
-    grid.innerHTML='<div class="none">Ничего не найдено.<br><button id="r2">Сбросить фильтры</button></div>';
+    grid.innerHTML='<div class="none">'+(state.fav&&!favs.size?'В избранном пока пусто. Нажмите ♡ на постере фильма.':'Ничего не найдено.')+'<br><button id="r2">Сбросить фильтры</button></div>';
     $('#r2').onclick=resetFilters;return;
   }
   grid.style.display='';
@@ -280,7 +307,7 @@ function renderCatalog(){
   list.forEach(m=>{
     const a=document.createElement('a');a.className='card';a.href='#f'+m.id;
     const h=document.createElement('h3');h.className='ct';h.textContent=m.title;
-    const p=document.createElement('div');p.className='poster';p.appendChild(makePoster(m));
+    const p=document.createElement('div');p.className='poster';p.appendChild(makePoster(m));p.appendChild(makeFav(m));
     const meta=document.createElement('div');meta.className='meta';
     meta.innerHTML='<span class="kp">★ '+m.kp.toFixed(1)+' КП</span><span>'+m.genre+'</span>';
     a.append(h,p,meta);frag.appendChild(a);
@@ -308,10 +335,11 @@ function renderFranchises(){
   sel.value=state.franchise;
 }
 $('#fr').onchange=e=>{state.franchise=e.target.value;renderCatalog()};
-function resetFilters(){state.q='';state.genre='';state.franchise='';state.min=0;$('#fr').value='';$('#q').value='';$('#minKp').value=0;$('#minV').textContent='0';renderGenres();renderCatalog()}
+function resetFilters(){state.q='';state.genre='';state.franchise='';state.min=0;state.fav=false;$('#favOnly').setAttribute('aria-checked','false');$('#fr').value='';$('#q').value='';$('#minKp').value=0;$('#minV').textContent='0';renderGenres();renderCatalog()}
 $('#q').oninput=e=>{state.q=e.target.value;renderCatalog()};
 $('#minKp').oninput=e=>{state.min=+e.target.value;$('#minV').textContent=e.target.value;renderCatalog()};
 $('#reset').onclick=resetFilters;
+$('#favOnly').onclick=e=>{state.fav=!state.fav;e.currentTarget.setAttribute('aria-checked',String(state.fav));renderCatalog()};
 
 /* panels */
 const panels=[['#btnF','#pF'],['#btnS','#pS']];
@@ -330,6 +358,12 @@ function setTheme(t){
 }
 document.querySelectorAll('#theme button').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
 setTheme(ls.get('pc_theme','dark')==='light'?'light':'dark');
+
+/* warm filter */
+const WARM_KEY='paradise_warm_filter';
+function applyWarm(on){$('#warm-overlay').style.display=on?'block':'none';$('#warm').setAttribute('aria-checked',String(on))}
+$('#warm').onclick=e=>{const on=e.currentTarget.getAttribute('aria-checked')!=='true';applyWarm(on);ls.set(WARM_KEY,on)};
+applyWarm(ls.get(WARM_KEY,false)===true);
 
 /* recent */
 function addRecent(id){const r=ls.get('pc_recent',[]).filter(x=>x!==id);r.unshift(id);ls.set('pc_recent',r.slice(0,8))}
@@ -388,7 +422,7 @@ const topBtn=$('#top');
 window.addEventListener('scroll',()=>topBtn.classList.toggle('show',window.scrollY>300),{passive:true});
 topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 
-renderGenres();renderFranchises();renderCatalog();route();
+updateFavCount();renderGenres();renderFranchises();renderCatalog();route();
 </script>
 </body>
 </html>
