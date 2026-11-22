@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PARADISE CINEMA</title>
+<style>
+:root{--overlay:rgba(10,10,14,.78);--text:#f3f4f7;--muted:#a2a8b6;--surface:rgba(24,26,32,.78);--line:rgba(255,255,255,.14);--gold:#f59e0b;--field:rgba(255,255,255,.08)}
+html[data-theme=light]{--overlay:rgba(245,246,250,.85);--text:#16181d;--muted:#555b6a;--surface:rgba(255,255,255,.82);--line:rgba(0,0,0,.16);--field:rgba(0,0,0,.06)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-color:#f59e0b #15171c;scrollbar-width:thin}
+body{margin:0;min-height:100vh;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background-color:#0a0a0e;background-image:url('bg-desktop.jpg');background-size:cover;background-position:center center;background-attachment:fixed;background-repeat:no-repeat}
+@media (max-width:768px){body{background-image:url('bg-mobile.jpg')}}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--overlay);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+::-webkit-scrollbar{width:11px}
+::-webkit-scrollbar-track{background:#15171c}
+::-webkit-scrollbar-thumb{background:linear-gradient(#f59e0b,#b45309);border-radius:8px;border:2px solid #15171c}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* header */
+header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:10px 14px;background:rgba(24,26,32,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.1);color:#f3f4f7}
+.hbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:8px 14px;color:#f3f4f7;font-weight:600}
+.hbtn:hover{background:rgba(245,158,11,.22)}
+#btnF{justify-self:start}#btnS{justify-self:end;font-size:20px;line-height:1;padding:7px 12px}
+.logo{margin:0;font:900 22px/1 "Arial Black",Impact,system-ui,sans-serif;letter-spacing:.04em;text-decoration:none;color:#fff;white-space:nowrap}
+.logo span{color:var(--gold);margin-left:.3em}
+@media (max-width:480px){.logo{font-size:16px}.hbtn{padding:7px 10px;font-size:14px}}
+
+/* panels */
+.panel{position:fixed;top:58px;z-index:60;width:min(360px,94vw);max-height:calc(100vh - 70px);overflow:auto;padding:16px;background:rgba(24,26,32,.97);color:#f3f4f7;border:1px solid rgba(255,255,255,.16);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.55)}
+#pF{left:10px}#pS{right:10px}
+.panel h2{margin:0 0 10px;font-size:15px}
+.panel label{display:block;margin:14px 0 6px;font-size:14px;color:#a2a8b6}
+.panel input[type=search]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit}
+.panel input[type=range]{width:100%;accent-color:#f59e0b}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip,.seg button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);border-radius:999px;padding:5px 12px;font-size:14px;color:#f3f4f7}
+.chip[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
+.seg{display:flex;gap:6px}.seg button{flex:1;border-radius:10px;padding:8px}
+.recent{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.recent a{display:block;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.06);text-decoration:none;font-size:14px}
+.recent a:hover{background:rgba(245,158,11,.22)}
+.empty{color:#a2a8b6;font-size:14px;margin:0}
+.link{background:none;border:0;color:var(--gold);padding:6px 0;font-size:14px;text-decoration:underline}
+
+/* to top */
+#top{position:fixed;top:68px;left:50%;z-index:40;transform:translate(-50%,-14px);opacity:0;pointer-events:none;transition:.25s;padding:8px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(24,26,32,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font-weight:600}
+#top.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+
+/* catalog */
+.wrap{max-width:1200px;margin:0 auto;padding:22px 16px 60px}
+.count{margin:0 0 16px;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 20px}
+@media (max-width:1024px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:20px 12px}.wrap{padding:16px 12px 50px}}
+.card{display:flex;flex-direction:column;gap:8px;text-decoration:none}
+.ct{margin:0;font-size:15px;line-height:1.25;font-weight:700;min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.poster{aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#1b1d24;border:1px solid var(--line);transition:transform .2s,border-color .2s}
+.card:hover .poster{transform:translateY(-3px);border-color:var(--gold)}
+.poster img{display:block;width:100%;height:100%;object-fit:cover}
+.cover{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;padding:14px;text-align:center;background:linear-gradient(160deg,#23252d,#121317);color:#f3f4f7}
+.cover b{font-size:17px;line-height:1.25}.cover i{font-style:normal;color:var(--gold);font-weight:700}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}
+.kp{color:var(--gold);font-weight:700;white-space:nowrap}
+.none{text-align:center;padding:60px 0;color:var(--muted)}
+.none button{margin-top:10px;padding:8px 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+
+/* movie page */
+.back{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600}
+.vc{max-width:760px;margin:22px auto 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
+.vposter{width:min(320px,80%);aspect-ratio:2/3;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#1b1d24;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.vposter img{display:block;width:100%;height:100%;object-fit:cover}
+.vc h1{margin:0;font-size:clamp(22px,4vw,32px);line-height:1.2}
+.ratings{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.ratings span{padding:6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:15px}
+.ratings .kp{color:var(--gold)}
+.watch{background:var(--gold);color:#1a1100;border:0;border-radius:12px;padding:14px 56px;font-size:19px;font-weight:800;box-shadow:0 8px 26px rgba(245,158,11,.35)}
+.watch:hover{background:#fbbf24}
+.vc p{margin:0;max-width:640px;font-size:17px;line-height:1.65}
+.player{width:100%;height:480px;scroll-margin-top:70px;background:#000;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+@media (max-width:768px){.player{height:250px}}
+.player iframe{width:100%;height:100%;border:0;display:block}
+.srcs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;width:100%}
+.srcs .src{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 16px;font-size:14px;font-weight:600;text-decoration:none;color:var(--text)}
+.srcs .src:hover{border-color:var(--gold)}
+.srcs .src[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
+@media (max-width:480px){.srcs{flex-direction:column}.srcs .src{text-align:center}}
+.adnote{width:100%;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--gold);font-size:14px;color:var(--muted)}
+.adnote b{display:block;color:var(--text);margin-bottom:4px}
+.adnote a{color:var(--gold);font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <button class="hbtn" id="btnF" aria-expanded="false" aria-controls="pF">≡ Фильтры</button>
+  <a class="logo" href="#" aria-label="PARADISE CINEMA — каталог">PARADISE<span>CINEMA</span></a>
+  <button class="hbtn" id="btnS" aria-expanded="false" aria-controls="pS" aria-label="Настройки">⚙</button>
+</header>
+
+<div class="panel" id="pF" hidden>
+  <h2>Фильтры</h2>
+  <label for="q">Поиск по названию</label>
+  <input type="search" id="q" placeholder="Например, Гамп">
+  <label>Жанр</label>
+  <div class="chips" id="genres"></div>
+  <label for="minKp">Минимальный рейтинг КП: <b id="minV">0</b></label>
+  <input type="range" id="minKp" min="0" max="9" step="0.5" value="0">
+  <button class="link" id="reset">Сбросить фильтры</button>
+</div>
+
+<div class="panel" id="pS" hidden>
+  <h2>Настройки</h2>
+  <label>Тема оформления</label>
+  <div class="seg" id="theme"><button data-t="dark">Темная</button><button data-t="light">Светлая</button></div>
+  <label>Недавно просмотренные</label>
+  <ul class="recent" id="recent"></ul>
+  <button class="link" id="clearRecent">Очистить список</button>
+</div>
+
+<button id="top" aria-label="Наверх">↑ Наверх</button>
+
+<main>
+  <section id="catalog" class="wrap">
+    <p class="count" id="count"></p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="view" class="wrap" hidden>
+    <button class="back" id="back">← Назад в каталог</button>
+    <div class="vc">
+      <div class="vposter" id="vposter"></div>
+      <h1 id="vtitle"></h1>
+      <div class="ratings" id="vrat"></div>
+      <button class="watch" id="watch">Смотреть</button>
+      <p id="vdesc"></p>
+      <div class="player" id="player"></div>
+      <div class="srcs" id="srcs">
+        <button class="src" id="src1" aria-pressed="true">Плеер 1 (Основной)</button>
+        <a class="src" id="src2" target="_blank" rel="noopener">Открыть в ReYoHoHo ↗</a>
+        <a class="src" id="src3" target="_blank" rel="noopener">Открыть в Flicksbar ↗</a>
+      </div>
+      <div class="adnote"><b>Для просмотра без встроенной рекламы в плеере</b>
+        На компьютере: <a href="https://ublockorigin.com" target="_blank" rel="noopener">uBlock Origin</a>. На телефоне: браузер <a href="https://brave.com" target="_blank" rel="noopener">Brave</a>.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* [id, название, год, жанр, КП, IMDb, описание] */
+const RAW=[
+[594554,"Мир Юрского периода",2015,"Фантастика",7.2,6.9,"Парк динозавров наконец открыт, но созданный в лаборатории гибрид выходит из-под контроля."],
+[924311,"Мир Юрского периода 2",2018,"Фантастика",6.6,6.1,"Извержение вулкана грозит гибелью динозаврам острова, и героям приходится вмешаться."],
+[1115098,"Мир Юрского периода: Господство",2022,"Фантастика",6.1,5.6,"Динозавры расселились по всему миру, а люди вынуждены учиться жить рядом с ними."],
+[7121,"Парк Юрского периода",1993,"Фантастика",8.2,8.2,"Учёные приезжают на остров с оживлёнными динозаврами, и экскурсия превращается в борьбу за жизнь."],
+[786018,"Бивень",2014,"Ужасы",5.7,5.4,"Подкастер попадает в руки безумца, который мечтает превратить человека в морского жителя."],
+[668,"Пункт назначения",2000,"Ужасы",7.0,6.7,"Школьник предвидит катастрофу самолёта, но смерть не хочет отпускать тех, кто спасся."],
+[81924,"300 спартанцев",2007,"Боевик",7.6,7.5,"Царь Леонид с тремя сотнями воинов преграждает путь огромной персидской армии."],
+[3442,"Троя",2004,"Приключения",7.6,7.3,"Похищение Елены запускает десятилетнюю войну, в которой сражается великий Ахилл."],
+[838,"Человек-паук",2002,"Боевик",7.2,7.4,"Укус необычного паука превращает застенчивого школьника Питера Паркера в героя."],
+[2898,"Человек-паук 2",2004,"Боевик",7.5,7.3,"Питер устал от двойной жизни, а в городе появляется безумный доктор Октавиус."],
+[82441,"Человек-паук 3: Враг в отражении",2007,"Боевик",6.7,6.2,"Чёрный костюм пробуждает в герое тёмную сторону, а врагов становится всё больше."],
+[278217,"Новый Человек-паук",2012,"Боевик",7.0,6.9,"Питер Паркер узнаёт тайну пропавших родителей и сталкивается с Ящером."],
+[21503,"Майор Пэйн",1995,"Комедия",7.3,5.3,"Суровому морпеху поручают превратить отряд трудных подростков в настоящих бойцов."],
+[102376,"Кровавый алмаз",2006,"Драма",8.0,8.0,"Контрабандист и рыбак ищут редкий алмаз на фоне гражданской войны в Сьерра-Леоне."],
+[9691,"Бесславные ублюдки",2009,"Военный",8.1,8.4,"Отряд охотников за нацистами и юная владелица кинотеатра задумывают месть."],
+[602749,"Парни со стволами",2016,"Криминал",7.1,7.1,"Два молодых друга берутся за выгодный контракт на поставку оружия армии США."],
+[586397,"Джанго освобождённый",2012,"Вестерн",8.2,8.4,"Бывший раб вместе с охотником за головами отправляется спасать свою жену."],
+[819101,"Омерзительная восьмёрка",2015,"Вестерн",7.8,7.8,"Во время метели в придорожной лавке собираются восемь людей, и у каждого есть тайна."],
+[81728,"Морпехи",2005,"Военный",7.3,7.0,"Снайпер-морпех ждёт приказа в пустыне Персидского залива во время войны."],
+[81288,"Трансформеры",2007,"Фантастика",7.9,7.0,"Парень покупает старую машину, которая оказывается живым инопланетным роботом."],
+[373391,"Трансформеры: Месть падших",2009,"Фантастика",7.0,6.0,"Десептиконы возвращаются за источником энергии, спрятанным на Земле."],
+[452899,"Трансформеры 3: Тёмная сторона Луны",2011,"Фантастика",7.1,6.2,"Автоботы узнают о тайне корабля на Луне, связанной с космической гонкой."],
+[651857,"Трансформеры: Эпоха истребления",2014,"Фантастика",6.5,5.6,"Правительство охотится на роботов, а изобретатель из Техаса находит Оптимуса Прайма."],
+[811609,"Трансформеры: Последний рыцарь",2017,"Фантастика",6.1,5.2,"Тайна рыцарей Круглого стола связана с судьбой Земли и Кибертрона."],
+[6695,"Звёздные войны: Эпизод 1 — Скрытая угроза",1999,"Фантастика",7.6,6.5,"Два джедая встречают на Татуине мальчика Энакина, обладающего огромной Силой."],
+[844,"Звёздные войны: Эпизод 2 — Атака клонов",2002,"Фантастика",7.6,6.5,"Оби-Ван расследует покушение, а Энакин влюбляется в сенатора Падме."],
+[5619,"Звёздные войны: Эпизод 3 — Месть ситхов",2005,"Фантастика",8.0,7.6,"Энакин переходит на тёмную сторону, и рождается Дарт Вейдер."],
+[333,"Звёздные войны: Эпизод 4 — Новая надежда",1977,"Фантастика",8.3,8.6,"Фермер Люк Скайуокер вступает в борьбу с Империей и ее Звездой Смерти."],
+[338,"Звёздные войны: Эпизод 5 — Империя наносит ответный удар",1980,"Фантастика",8.4,8.7,"Повстанцы скрываются от Империи, а Люк проходит обучение у мастера Йоды."],
+[447,"Звёздные войны: Эпизод 6 — Возвращение Джедая",1983,"Фантастика",8.2,8.3,"Финальная битва повстанцев с Императором и встреча Люка с Вейдером."],
+[358,"Таксист",1976,"Драма",8.1,8.2,"Ветеран войны работает ночным таксистом и всё сильнее ненавидит грязь большого города."],
+[361,"Бойцовский клуб",1999,"Драма",8.7,8.8,"Офисный работник и харизматичный Тайлер Дёрден создают тайный клуб для драк."],
+[397667,"Остров проклятых",2009,"Триллер",8.5,8.2,"Маршал расследует исчезновение пациентки в закрытой психиатрической клинике."],
+[6303,"Хищник",1987,"Боевик",7.7,7.8,"Отряд спецназа в джунглях становится добычей невидимого инопланетного охотника."],
+[4542208,"Вышка",2022,"Триллер",6.6,6.4,"Две подруги забираются на заброшенную башню высотой 600 метров и не могут спуститься."],
+[276295,"Залечь на дно в Брюгге",2007,"Криминал",8.0,7.9,"Двое наёмников после провального задания прячутся в сказочном бельгийском городе."],
+[391,"Заводной апельсин",1971,"Драма",8.3,8.3,"Юный главарь банды совершает жестокости, а государство пытается его перевоспитать."],
+[5932,"Очень страшное кино",2000,"Комедия",7.0,6.2,"Пародия на фильмы ужасов о подростках, которых преследует маньяк в маске."],
+[463738,"Восстание планеты обезьян",2011,"Фантастика",7.7,7.6,"Учёный испытывает лекарство на шимпанзе Цезаре, и тот становится невероятно умным."],
+[646674,"Планета обезьян: Революция",2014,"Фантастика",7.8,7.6,"Обезьяны и выжившие люди пытаются сохранить хрупкий мир, но война неизбежна."],
+[819281,"Планета обезьян: Война",2017,"Фантастика",7.8,7.3,"Цезарь ведёт свой народ в последнюю битву против безжалостного полковника."],
+[171728,"Пираньи 3D",2010,"Ужасы",5.8,5.5,"Подземное землетрясение выпускает на курорт стаю древних кровожадных рыб."],
+[4541,"Шоу Трумана",1998,"Драма",8.6,8.2,"Трумэн не знает, что вся его жизнь — реалити-шоу, которое смотрит весь мир."],
+[448,"Форрест Гамп",1994,"Драма",8.9,8.8,"Добрый и простодушный человек проходит сквозь десятилетия истории Америки."],
+[276598,"Драйв",2011,"Криминал",7.6,7.8,"Молчаливый каскадёр по ночам работает водителем для налётчиков."],
+[535341,"1+1",2011,"Драма",8.8,8.5,"Богатый аристократ-инвалид нанимает в помощники бывшего заключённого из пригорода."]
+];
+const MOVIES=RAW.map(r=>({id:r[0],title:r[1],year:r[2],genre:r[3],kp:r[4],imdb:r[5],desc:r[6]}));
+
+const $=s=>document.querySelector(s);
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const posterUrl=id=>'https://st.kp.yandex.net/images/film_iphone/iphone360_'+id+'.jpg';
+const state={q:'',genre:'',min:0};
+let savedY=0,current=null;
+
+function makeCover(m){
+  const d=document.createElement('div');d.className='cover';
+  const b=document.createElement('b');b.textContent=m.title;
+  const i=document.createElement('i');i.textContent=m.year;
+  d.append(b,i);return d;
+}
+function makePoster(m){
+  const img=document.createElement('img');
+  img.src=posterUrl(m.id);img.alt='Постер: '+m.title;img.loading='lazy';
+  img.onerror=function(){this.replaceWith(makeCover(m))};
+  return img;
+}
+
+/* catalog */
+function renderCatalog(){
+  const q=state.q.trim().toLowerCase();
+  const list=MOVIES.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(!state.genre||m.genre===state.genre)&&m.kp>=state.min);
+  const grid=$('#grid');grid.innerHTML='';
+  $('#count').textContent='Найдено фильмов: '+list.length+' из '+MOVIES.length;
+  if(!list.length){
+    grid.style.display='block';
+    grid.innerHTML='<div class="none">Ничего не найдено.<br><button id="r2">Сбросить фильтры</button></div>';
+    $('#r2').onclick=resetFilters;return;
+  }
+  grid.style.display='';
+  const frag=document.createDocumentFragment();
+  list.forEach(m=>{
+    const a=document.createElement('a');a.className='card';a.href='#f'+m.id;
+    const h=document.createElement('h3');h.className='ct';h.textContent=m.title;
+    const p=document.createElement('div');p.className='poster';p.appendChild(makePoster(m));
+    const meta=document.createElement('div');meta.className='meta';
+    meta.innerHTML='<span class="kp">★ '+m.kp.toFixed(1)+' КП</span><span>'+m.genre+'</span>';
+    a.append(h,p,meta);frag.appendChild(a);
+  });
+  grid.appendChild(frag);
+}
+
+/* filters */
+const genres=[...new Set(MOVIES.map(m=>m.genre))].sort((a,b)=>a.localeCompare(b,'ru'));
+function renderGenres(){
+  const box=$('#genres');box.innerHTML='';
+  ['',...genres].forEach(g=>{
+    const b=document.createElement('button');b.className='chip';b.textContent=g||'Все';
+    b.setAttribute('aria-pressed',String(state.genre===g));
+    b.onclick=()=>{state.genre=g;renderGenres();renderCatalog()};
+    box.appendChild(b);
+  });
+}
+function resetFilters(){state.q='';state.genre='';state.min=0;$('#q').value='';$('#minKp').value=0;$('#minV').textContent='0';renderGenres();renderCatalog()}
+$('#q').oninput=e=>{state.q=e.target.value;renderCatalog()};
+$('#minKp').oninput=e=>{state.min=+e.target.value;$('#minV').textContent=e.target.value;renderCatalog()};
+$('#reset').onclick=resetFilters;
+
+/* panels */
+const panels=[['#btnF','#pF'],['#btnS','#pS']];
+function closePanels(){panels.forEach(([b,p])=>{$(p).hidden=true;$(b).setAttribute('aria-expanded','false')})}
+panels.forEach(([b,p])=>{
+  $(b).onclick=e=>{e.stopPropagation();const open=$(p).hidden;closePanels();if(open){$(p).hidden=false;$(b).setAttribute('aria-expanded','true');if(p==='#pS')renderRecent()}};
+  $(p).onclick=e=>e.stopPropagation();
+});
+document.addEventListener('click',closePanels);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanels()});
+
+/* theme */
+function setTheme(t){
+  document.documentElement.dataset.theme=t;ls.set('pc_theme',t);
+  document.querySelectorAll('#theme button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.t===t)));
+}
+document.querySelectorAll('#theme button').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+setTheme(ls.get('pc_theme','dark')==='light'?'light':'dark');
+
+/* recent */
+function addRecent(id){const r=ls.get('pc_recent',[]).filter(x=>x!==id);r.unshift(id);ls.set('pc_recent',r.slice(0,8))}
+function renderRecent(){
+  const ul=$('#recent');ul.innerHTML='';
+  const items=ls.get('pc_recent',[]).map(id=>MOVIES.find(m=>m.id===id)).filter(Boolean);
+  $('#clearRecent').hidden=!items.length;
+  if(!items.length){ul.innerHTML='<li class="empty">Пока пусто. Откройте любой фильм, и он появится здесь.</li>';return}
+  items.forEach(m=>{
+    const li=document.createElement('li'),a=document.createElement('a');
+    a.href='#f'+m.id;a.textContent=m.title+' ('+m.year+')';a.onclick=closePanels;
+    li.appendChild(a);ul.appendChild(li);
+  });
+}
+$('#clearRecent').onclick=()=>{ls.set('pc_recent',[]);renderRecent()};
+
+/* movie page */
+function initPlayer(){
+  $('#player').innerHTML='<iframe src="https://kinodivbox.github.io/iframe?id='+current.id+'" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>';
+  $('#src1').setAttribute('aria-pressed','true');
+}
+$('#src1').onclick=()=>{if(current)initPlayer()};
+$('#watch').onclick=()=>$('#player').scrollIntoView({behavior:'smooth',block:'start'});
+$('#back').onclick=()=>{location.hash=''};
+
+function openMovie(m){
+  if(!current)savedY=window.scrollY;
+  current=m;
+  $('#catalog').hidden=true;$('#view').hidden=false;
+  $('#vposter').innerHTML='';$('#vposter').appendChild(makePoster(m));
+  $('#vtitle').textContent=m.title;
+  $('#vrat').innerHTML='<span class="kp">Кинопоиск '+m.kp.toFixed(1)+'</span><span>IMDb '+m.imdb.toFixed(1)+'</span><span>'+m.year+'</span>';
+  $('#vdesc').textContent=m.desc;
+  document.title=m.title+' — PARADISE CINEMA';
+  $('#src2').href='https://reyohoho.github.io/reyohoho/#'+m.id;
+  $('#src3').href='https://flcksbr.top/film/'+m.id+'/';
+  addRecent(m.id);initPlayer();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showCatalog(){
+  const was=current;current=null;
+  $('#player').innerHTML='';
+  $('#view').hidden=true;$('#catalog').hidden=false;
+  document.title='PARADISE CINEMA';
+  if(was)window.scrollTo({top:savedY,behavior:'instant'});
+}
+function route(){
+  const m=location.hash.match(/^#f(\d+)$/);
+  const mv=m&&MOVIES.find(x=>x.id===+m[1]);
+  mv?openMovie(mv):showCatalog();
+}
+window.addEventListener('hashchange',route);
+
+/* to top */
+const topBtn=$('#top');
+window.addEventListener('scroll',()=>topBtn.classList.toggle('show',window.scrollY>300),{passive:true});
+topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+
+renderGenres();renderCatalog();route();
+</script>
+</body>
+</html>
