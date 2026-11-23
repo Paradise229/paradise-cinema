@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PARADISE CINEMA — Сериалы</title>
+<style>
+:root{--overlay:rgba(10,10,14,.78);--text:#f3f4f7;--muted:#a2a8b6;--surface:rgba(24,26,32,.78);--line:rgba(255,255,255,.14);--gold:#f59e0b;--field:rgba(255,255,255,.08)}
+html[data-theme=light]{--overlay:rgba(245,246,250,.85);--text:#16181d;--muted:#555b6a;--surface:rgba(255,255,255,.82);--line:rgba(0,0,0,.16);--field:rgba(0,0,0,.06)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-color:#f59e0b #15171c;scrollbar-width:thin}
+body{margin:0;min-height:100vh;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background-color:#0a0a0e;background-image:url('bg-desktop.jpg');background-size:cover;background-position:center center;background-attachment:fixed;background-repeat:no-repeat}
+@media (max-width:768px){body{background-image:url('bg-mobile.jpg')}}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--overlay);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+::-webkit-scrollbar{width:11px}
+::-webkit-scrollbar-track{background:#15171c}
+::-webkit-scrollbar-thumb{background:linear-gradient(#f59e0b,#b45309);border-radius:8px;border:2px solid #15171c}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* header */
+header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:10px 14px;background:rgba(24,26,32,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.1);color:#f3f4f7}
+.hbtn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:8px 14px;color:#f3f4f7;font-weight:600}
+.hbtn:hover{background:rgba(245,158,11,.22)}
+#btnF{justify-self:start}#btnS{justify-self:end;font-size:20px;line-height:1;padding:7px 12px}
+.logo{margin:0;font:900 22px/1 "Arial Black",Impact,system-ui,sans-serif;letter-spacing:.04em;text-decoration:none;color:#fff;white-space:nowrap}
+.logo span{color:var(--gold);margin-left:.3em}
+@media (max-width:480px){.logo{font-size:16px}.hbtn{padding:7px 10px;font-size:14px}}
+
+/* panels */
+.panel{position:fixed;top:58px;z-index:60;width:min(360px,94vw);max-height:calc(100vh - 70px);overflow:auto;padding:16px;background:rgba(24,26,32,.97);color:#f3f4f7;border:1px solid rgba(255,255,255,.16);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.55)}
+#pF{left:10px}#pS{right:10px}
+.panel h2{margin:0 0 10px;font-size:15px}
+.panel label{display:block;margin:14px 0 6px;font-size:14px;color:#a2a8b6}
+.panel input[type=search]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit}
+.panel input[type=range]{width:100%;accent-color:#f59e0b}
+.panel select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit}
+.panel select option{color:#111}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:14px;color:#f3f4f7}
+.trow small{color:#a2a8b6;font-size:13px}
+.sw{position:relative;flex:none;width:44px;height:24px;padding:0;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);transition:background .2s,border-color .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw[aria-checked=true]{background:var(--gold);border-color:var(--gold)}
+.sw[aria-checked=true]::after{transform:translateX(20px)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip,.seg button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);border-radius:999px;padding:5px 12px;font-size:14px;color:#f3f4f7}
+.chip[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
+.seg{display:flex;gap:6px}.seg button{flex:1;border-radius:10px;padding:8px}
+.seg a{flex:1;text-align:center;text-decoration:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);border-radius:10px;padding:8px;font-size:14px;color:#f3f4f7}
+.seg a[aria-current]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
+.hr{justify-self:end;display:flex;align-items:center;gap:8px}
+a.hbtn{display:inline-block;text-decoration:none}
+@media (max-width:480px){a.navlink{display:none}}
+.recent{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.recent a{display:block;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.06);text-decoration:none;font-size:14px}
+.recent a:hover{background:rgba(245,158,11,.22)}
+.empty{color:#a2a8b6;font-size:14px;margin:0}
+.link{background:none;border:0;color:var(--gold);padding:6px 0;font-size:14px;text-decoration:underline}
+
+/* to top */
+#top{position:fixed;top:68px;left:50%;z-index:40;transform:translate(-50%,-14px);opacity:0;pointer-events:none;transition:.25s;padding:8px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(24,26,32,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font-weight:600}
+#top.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+
+/* catalog */
+.wrap{max-width:1200px;margin:0 auto;padding:22px 16px 60px}
+.count{margin:0 0 16px;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 20px}
+@media (max-width:1024px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:20px 12px}.wrap{padding:16px 12px 50px}}
+.card{display:flex;flex-direction:column;gap:8px;text-decoration:none}
+.ct{margin:0;font-size:15px;line-height:1.25;font-weight:700;min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.poster{aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#1b1d24;border:1px solid var(--line);transition:transform .2s,border-color .2s}
+.card:hover .poster{transform:translateY(-3px);border-color:var(--gold)}
+.poster{position:relative}
+.fav{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;font-size:20px;line-height:1;opacity:.5;transition:opacity .2s,color .2s,transform .15s}
+.fav:hover,.fav:focus-visible{opacity:1}
+.fav[aria-pressed=true]{opacity:1;color:#ff4d6d}
+.fav:active{transform:scale(.86)}
+#warm-overlay{position:fixed;inset:0;background-color:rgba(230,160,80,.10);mix-blend-mode:multiply;pointer-events:none;z-index:9999;display:none;transition:opacity .3s ease}
+.poster img{display:block;width:100%;height:100%;object-fit:cover}
+.cover{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;padding:14px;text-align:center;background:linear-gradient(160deg,#23252d,#121317);color:#f3f4f7}
+.cover b{font-size:17px;line-height:1.25}.cover i{font-style:normal;color:var(--gold);font-weight:700}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}
+.kp{color:var(--gold);font-weight:700;white-space:nowrap}
+.none{text-align:center;padding:60px 0;color:var(--muted)}
+.none button{margin-top:10px;padding:8px 18px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+
+/* movie page */
+.back{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600}
+.vc{max-width:760px;margin:22px auto 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
+.vposter{width:min(320px,80%);aspect-ratio:2/3;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#1b1d24;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.vposter img{display:block;width:100%;height:100%;object-fit:cover}
+.vc h1{margin:0;font-size:clamp(22px,4vw,32px);line-height:1.2}
+.ratings{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.ratings span{padding:6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:15px}
+.ratings .kp{color:var(--gold)}
+.watch{background:var(--gold);color:#1a1100;border:0;border-radius:12px;padding:14px 56px;font-size:19px;font-weight:800;box-shadow:0 8px 26px rgba(245,158,11,.35)}
+.watch:hover{background:#fbbf24}
+.recommend{width:100%;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:15px;text-align:left}
+.recommend a{color:var(--gold);font-weight:700;text-decoration:none}
+.recommend a:hover{text-decoration:underline}
+.vc p{margin:0;max-width:640px;font-size:17px;line-height:1.65}
+.player{width:100%;height:480px;scroll-margin-top:70px;background:#000;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+@media (max-width:768px){.player{height:250px}}
+.player iframe{width:100%;height:100%;border:0;display:block}
+.srcs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;width:100%}
+.srcs .src{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 16px;font-size:14px;font-weight:600;text-decoration:none;color:var(--text)}
+.srcs .src:hover{border-color:var(--gold)}
+.srcs .src[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
+@media (max-width:480px){.srcs{flex-direction:column}.srcs .src{text-align:center}}
+.adnote{width:100%;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--gold);font-size:14px;color:var(--muted)}
+.adnote b{display:block;color:var(--text);margin-bottom:4px}
+.adnote a{color:var(--gold);font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <button class="hbtn" id="btnF" aria-expanded="false" aria-controls="pF">≡ Фильтры</button>
+  <a class="logo" href="#" aria-label="PARADISE CINEMA — каталог">PARADISE<span>CINEMA</span></a>
+  <div class="hr">
+    <a class="hbtn navlink" href="index.html">Фильмы</a>
+    <button class="hbtn" id="btnS" aria-expanded="false" aria-controls="pS" aria-label="Настройки">⚙</button>
+  </div>
+</header>
+
+<div class="panel" id="pF" hidden>
+  <h2>Фильтры</h2>
+  <label for="q">Поиск по названию</label>
+  <input type="search" id="q" placeholder="Например, Кухня">
+  <label>Жанр</label>
+  <div class="chips" id="genres"></div>
+  <label for="fr">Франшиза</label>
+  <select id="fr"></select>
+  <div class="trow"><span>Только избранное <small id="favCount"></small></span><button class="sw" id="favOnly" role="switch" aria-checked="false" aria-label="Только избранное"></button></div>
+  <label for="minKp">Минимальный рейтинг КП: <b id="minV">0</b></label>
+  <input type="range" id="minKp" min="0" max="9" step="0.5" value="0">
+  <button class="link" id="reset">Сбросить фильтры</button>
+</div>
+
+<div class="panel" id="pS" hidden>
+  <h2>Настройки</h2>
+  <label>Раздел</label>
+  <div class="seg" id="sect"><a href="index.html">Фильмы</a><a href="series.html" aria-current="page">Сериалы</a></div>
+  <label>Тема оформления</label>
+  <div class="seg" id="theme"><button data-t="dark">Темная</button><button data-t="light">Светлая</button></div>
+  <div class="trow"><span>Теплый фильтр (для глаз)</span><button class="sw" id="warm" role="switch" aria-checked="false" aria-label="Теплый фильтр (для глаз)"></button></div>
+  <label>Недавно просмотренные</label>
+  <ul class="recent" id="recent"></ul>
+  <button class="link" id="clearRecent">Очистить список</button>
+</div>
+
+<button id="top" aria-label="Наверх">↑ Наверх</button>
+
+<main>
+  <section id="catalog" class="wrap">
+    <p class="count" id="count"></p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="view" class="wrap" hidden>
+    <button class="back" id="back">← Назад в каталог</button>
+    <div class="vc">
+      <div class="vposter" id="vposter"></div>
+      <h1 id="vtitle"></h1>
+      <div class="ratings" id="vrat"></div>
+      <button class="watch" id="watch">Смотреть</button>
+      <p id="vdesc"></p>
+      <div class="recommend" id="recommend" hidden></div>
+      <div class="player" id="player"></div>
+      <div class="srcs" id="srcs">
+        <button class="src" id="src1" aria-pressed="true">Плеер 1 (Основной)</button>
+        <a class="src" id="src2" target="_blank" rel="noopener">Открыть в ReYoHoHo ↗</a>
+        <a class="src" id="src3" target="_blank" rel="noopener">Открыть в Flicksbar ↗</a>
+      </div>
+      <div class="adnote"><b>Для просмотра без встроенной рекламы в плеере</b>
+        На компьютере: <a href="https://ublockorigin.com" target="_blank" rel="noopener">uBlock Origin</a>. На телефоне: браузер <a href="https://brave.com" target="_blank" rel="noopener">Brave</a>.</div>
+    </div>
+  </section>
+</main>
+
+<div id="warm-overlay" aria-hidden="true"></div>
+
+<script>
+/* [id, название, год, жанр, КП, IMDb, описание, франшиза или null] */
+const RAW_SERIES=[
+[5304403,"Слово пацана. Кровь на асфальте",2023,"Драма",7.7,7.5,"1988 год, Казань. Школьник вступает в уличную группировку, где свои законы и жестокие правила.",null],
+[7283766,"Айда!",2026,"Криминал",8.2,7.8,"Казань, 1980-е. Молодой парень оказывается втянут в мир группировок.",null],
+[687595,"Кухня",2012,"Комедия",7.8,6.5,"Люди разных характеров работают на одной кухне ресторана.",null],
+[404900,"Во все тяжкие",2008,"Криминал",9.0,9.5,"Школьный учитель химии, узнав о смертельном диагнозе, начинает производить наркотики.",null],
+[277537,"Декстер",2006,"Криминал",8.6,8.6,"Судебный эксперт по брызгам крови ведет двойную жизнь серийного убийцы.",null],
+[402955,"Прослушка",2002,"Криминал",8.9,9.3,"Полицейские Балтимора пытаются остановить наркоторговлю в городе.",null],
+[796660,"Лучше звоните Солу",2015,"Криминал",8.8,9.0,"История адвоката Джимми Макгилла до событий «Во все тяжкие».",null],
+[258048,"Побег",2005,"Боевик",8.6,8.3,"Инженер Майкл Скофилд совершает преступление, чтобы попасть в тюрьму и спасти брата.",null],
+[1160046,"Оби-Ван Кеноби",2022,"Фантастика",6.6,6.5,"Оби-Ван Кеноби скрывается на Татуине, но вынужден вновь вступить в борьбу.",null],
+[681831,"Настоящий детектив",2014,"Детектив",8.9,9.0,"Два детектива расследуют ритуальные убийства, в которых замешаны оккультные символы.",null],
+[915196,"Очень странные дела",2016,"Фантастика",8.0,8.7,"В маленьком городке пропадает мальчик, и его друзья сталкиваются с монстром из другого мира.",null],
+[460586,"Пацаны",2019,"Боевик",8.2,8.7,"Супергерои злоупотребляют властью, и обычные люди решают их наказать.",null],
+[253245,"Офис",2005,"Комедия",8.7,9.0,"Сотрудники бумажной компании терпят выходки своего нелепого начальника.",null],
+[412344,"Менталист",2008,"Детектив",8.2,8.1,"Бывший экстрасенс помогает полиции раскрывать убийства.",null],
+[464963,"Игра престолов",2011,"Фэнтези",9.0,9.2,"Знатные семьи борются за Железный трон Семи Королевств.",null],
+[243595,"Кости",2005,"Детектив",8.1,7.8,"Антрополог и агент ФБР расследуют убийства по останкам.",null],
+[104122,"Лост",2004,"Фантастика",8.5,8.4,"Пассажиры разбившегося самолета оказываются на загадочном острове.",null],
+[409640,"Касл",2009,"Детектив",8.3,8.1,"Писатель помогает полиции Нью-Йорка раскрывать убийства.",null],
+[1142153,"Новобранец",2018,"Детектив",8.0,8.0,"Новый сотрудник полиции, который старше большинства коллег, начинает свою карьеру.",null],
+];
+const MOVIES=RAW_SERIES.map(r=>({id:r[0],title:r[1],year:r[2],genre:r[3],kp:r[4],imdb:r[5],desc:r[6],franchise:r[7]||null}));
+
+const $=s=>document.querySelector(s);
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const posterUrl=id=>'https://st.kp.yandex.net/images/film_iphone/iphone360_'+id+'.jpg';
+const state={q:'',genre:'',franchise:'',min:0,fav:false};
+const FAV_KEY='paradise_favorites_series';
+const favs=new Set((()=>{const a=ls.get(FAV_KEY,[]);return Array.isArray(a)?a.filter(Number.isFinite):[]})());
+function updateFavCount(){$('#favCount').textContent=favs.size?'('+favs.size+')':''}
+function toggleFav(id){favs.has(id)?favs.delete(id):favs.add(id);ls.set(FAV_KEY,[...favs]);updateFavCount()}
+function makeFav(m){
+  const b=document.createElement('button');b.type='button';b.className='fav';
+  const sync=()=>{const on=favs.has(m.id);b.setAttribute('aria-pressed',String(on));b.textContent=on?'♥':'♡';b.setAttribute('aria-label',on?'Убрать из избранного':'Добавить в избранное')};
+  sync();
+  b.onclick=e=>{e.preventDefault();e.stopPropagation();toggleFav(m.id);sync();if(state.fav)renderCatalog()};
+  return b;
+}
+let savedY=0,current=null;
+
+function makeCover(m){
+  const d=document.createElement('div');d.className='cover';
+  const b=document.createElement('b');b.textContent=m.title;
+  const i=document.createElement('i');i.textContent=m.year;
+  d.append(b,i);return d;
+}
+function makePoster(m){
+  const img=document.createElement('img');
+  img.src=posterUrl(m.id);img.alt='Постер: '+m.title;img.loading='lazy';
+  img.onerror=function(){this.replaceWith(makeCover(m))};
+  return img;
+}
+
+/* catalog */
+function renderCatalog(){
+  const q=state.q.trim().toLowerCase();
+  const list=MOVIES.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(!state.genre||m.genre===state.genre)&&(!state.franchise||m.franchise===state.franchise)&&(!state.fav||favs.has(m.id))&&m.kp>=state.min);
+  const grid=$('#grid');grid.innerHTML='';
+  $('#count').textContent='Найдено сериалов: '+list.length+' из '+MOVIES.length;
+  if(!list.length){
+    grid.style.display='block';
+    grid.innerHTML='<div class="none">'+(state.fav&&!favs.size?'В избранном пока пусто. Нажмите ♡ на постере сериала.':'Ничего не найдено.')+'<br><button id="r2">Сбросить фильтры</button></div>';
+    $('#r2').onclick=resetFilters;return;
+  }
+  grid.style.display='';
+  const frag=document.createDocumentFragment();
+  list.forEach(m=>{
+    const a=document.createElement('a');a.className='card';a.href='#f'+m.id;
+    const h=document.createElement('h3');h.className='ct';h.textContent=m.title;
+    const p=document.createElement('div');p.className='poster';p.appendChild(makePoster(m));p.appendChild(makeFav(m));
+    const meta=document.createElement('div');meta.className='meta';
+    meta.innerHTML='<span class="kp">★ '+m.kp.toFixed(1)+' КП</span><span>'+m.genre+'</span>';
+    a.append(h,p,meta);frag.appendChild(a);
+  });
+  grid.appendChild(frag);
+}
+
+/* filters */
+const genres=[...new Set(MOVIES.map(m=>m.genre))].sort((a,b)=>a.localeCompare(b,'ru'));
+function renderGenres(){
+  const box=$('#genres');box.innerHTML='';
+  ['',...genres].forEach(g=>{
+    const b=document.createElement('button');b.className='chip';b.textContent=g||'Все';
+    b.setAttribute('aria-pressed',String(state.genre===g));
+    b.onclick=()=>{state.genre=g;renderGenres();renderCatalog()};
+    box.appendChild(b);
+  });
+}
+const franchises=[...new Set(MOVIES.map(m=>m.franchise).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ru'));
+function renderFranchises(){
+  const sel=$('#fr');sel.innerHTML='';
+  [['','Все франшизы'],...franchises.map(f=>[f,f+' ('+MOVIES.filter(m=>m.franchise===f).length+')'])].forEach(([v,t])=>{
+    const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);
+  });
+  sel.value=state.franchise;
+}
+$('#fr').onchange=e=>{state.franchise=e.target.value;renderCatalog()};
+function resetFilters(){state.q='';state.genre='';state.franchise='';state.min=0;state.fav=false;$('#favOnly').setAttribute('aria-checked','false');$('#fr').value='';$('#q').value='';$('#minKp').value=0;$('#minV').textContent='0';renderGenres();renderCatalog()}
+$('#q').oninput=e=>{state.q=e.target.value;renderCatalog()};
+$('#minKp').oninput=e=>{state.min=+e.target.value;$('#minV').textContent=e.target.value;renderCatalog()};
+$('#reset').onclick=resetFilters;
+$('#favOnly').onclick=e=>{state.fav=!state.fav;e.currentTarget.setAttribute('aria-checked',String(state.fav));renderCatalog()};
+
+/* panels */
+const panels=[['#btnF','#pF'],['#btnS','#pS']];
+function closePanels(){panels.forEach(([b,p])=>{$(p).hidden=true;$(b).setAttribute('aria-expanded','false')})}
+panels.forEach(([b,p])=>{
+  $(b).onclick=e=>{e.stopPropagation();const open=$(p).hidden;closePanels();if(open){$(p).hidden=false;$(b).setAttribute('aria-expanded','true');if(p==='#pS')renderRecent()}};
+  $(p).onclick=e=>e.stopPropagation();
+});
+document.addEventListener('click',closePanels);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanels()});
+
+/* theme */
+function setTheme(t){
+  document.documentElement.dataset.theme=t;ls.set('pc_theme',t);
+  document.querySelectorAll('#theme button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.t===t)));
+}
+document.querySelectorAll('#theme button').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+setTheme(ls.get('pc_theme','dark')==='light'?'light':'dark');
+
+/* warm filter */
+const WARM_KEY='paradise_warm_filter';
+function applyWarm(on){$('#warm-overlay').style.display=on?'block':'none';$('#warm').setAttribute('aria-checked',String(on))}
+$('#warm').onclick=e=>{const on=e.currentTarget.getAttribute('aria-checked')!=='true';applyWarm(on);ls.set(WARM_KEY,on)};
+applyWarm(ls.get(WARM_KEY,false)===true);
+
+/* recent */
+function addRecent(id){const r=ls.get('pc_recent_series',[]).filter(x=>x!==id);r.unshift(id);ls.set('pc_recent_series',r.slice(0,8))}
+function renderRecent(){
+  const ul=$('#recent');ul.innerHTML='';
+  const items=ls.get('pc_recent_series',[]).map(id=>MOVIES.find(m=>m.id===id)).filter(Boolean);
+  $('#clearRecent').hidden=!items.length;
+  if(!items.length){ul.innerHTML='<li class="empty">Пока пусто. Откройте любой сериал, и он появится здесь.</li>';return}
+  items.forEach(m=>{
+    const li=document.createElement('li'),a=document.createElement('a');
+    a.href='#f'+m.id;a.textContent=m.title+' ('+m.year+')';a.onclick=closePanels;
+    li.appendChild(a);ul.appendChild(li);
+  });
+}
+$('#clearRecent').onclick=()=>{ls.set('pc_recent_series',[]);renderRecent()};
+
+/* movie page */
+function initPlayer(){
+  $('#player').innerHTML='<iframe src="https://kinodivbox.github.io/iframe?id='+current.id+'" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>';
+  $('#src1').setAttribute('aria-pressed','true');
+}
+$('#src1').onclick=()=>{if(current)initPlayer()};
+$('#watch').onclick=()=>$('#player').scrollIntoView({behavior:'smooth',block:'start'});
+$('#back').onclick=()=>{location.hash=''};
+
+function pickRecommendation(m){
+  /* 1) следующая часть франшизы; 2) иначе лучший по КП фильм того же жанра */
+  if(m.franchise){
+    const parts=MOVIES.filter(x=>x.franchise===m.franchise).sort((a,b)=>a.year-b.year||a.id-b.id);
+    const next=parts[parts.findIndex(x=>x.id===m.id)+1];
+    if(next)return next;
+  }
+  const same=MOVIES.filter(x=>x.id!==m.id&&x.genre===m.genre).sort((a,b)=>b.kp-a.kp);
+  return same.find(x=>!m.franchise||x.franchise!==m.franchise)||same[0]||null;
+}
+function showRecommendation(m){
+  const box=$('#recommend'),rec=pickRecommendation(m);
+  if(!rec){box.hidden=true;box.innerHTML='';return}
+  box.innerHTML='';
+  const label=document.createElement('span');label.textContent='🎬 Рекомендуем посмотреть: ';
+  const a=document.createElement('a');a.href='#f'+rec.id;a.textContent=rec.title+' ('+rec.year+')';
+  box.append(label,a);box.hidden=false;
+}
+function openMovie(m){
+  if(!current)savedY=window.scrollY;
+  current=m;
+  $('#catalog').hidden=true;$('#view').hidden=false;
+  $('#vposter').innerHTML='';$('#vposter').appendChild(makePoster(m));
+  $('#vtitle').textContent=m.title;
+  $('#vrat').innerHTML='<span class="kp">Кинопоиск '+m.kp.toFixed(1)+'</span><span>IMDb '+m.imdb.toFixed(1)+'</span><span>'+m.year+'</span>';
+  $('#vdesc').textContent=m.desc;
+  showRecommendation(m);
+  document.title=m.title+' — PARADISE CINEMA';
+  $('#src2').href='https://reyohoho.github.io/reyohoho/#'+m.id;
+  $('#src3').href='https://flcksbr.top/film/'+m.id+'/';
+  addRecent(m.id);initPlayer();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showCatalog(){
+  const was=current;current=null;
+  $('#player').innerHTML='';
+  $('#view').hidden=true;$('#catalog').hidden=false;
+  document.title='PARADISE CINEMA — Сериалы';
+  if(was)window.scrollTo({top:savedY,behavior:'instant'});
+}
+function route(){
+  const m=location.hash.match(/^#f(\d+)$/);
+  const mv=m&&MOVIES.find(x=>x.id===+m[1]);
+  mv?openMovie(mv):showCatalog();
+}
+window.addEventListener('hashchange',route);
+
+/* to top */
+const topBtn=$('#top');
+window.addEventListener('scroll',()=>topBtn.classList.toggle('show',window.scrollY>300),{passive:true});
+topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+
+if(!franchises.length){$('#fr').hidden=true;document.querySelector('label[for="fr"]').hidden=true}
+updateFavCount();renderGenres();renderFranchises();renderCatalog();route();
+</script>
+</body>
+</html>
