@@ -53,6 +53,10 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
 .hr{justify-self:end;display:flex;align-items:center;gap:8px}
 a.hbtn{display:inline-block;text-decoration:none}
 @media (max-width:480px){a.navlink{display:none}}
+.tabs{display:none;gap:8px;margin:0 0 14px}
+.tabs a{flex:1;text-align:center;text-decoration:none;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:15px;color:var(--text)}
+.tabs a[aria-current]{background:var(--gold);border-color:var(--gold);color:#1a1100;font-weight:700}
+@media (max-width:480px){.tabs{display:flex}}
 .recent{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 .recent a{display:block;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.06);text-decoration:none;font-size:14px}
 .recent a:hover{background:rgba(245,158,11,.22)}
@@ -143,7 +147,7 @@ a.hbtn{display:inline-block;text-decoration:none}
 <div class="panel" id="pS" hidden>
   <h2>Настройки</h2>
   <label>Раздел</label>
-  <div class="seg" id="sect"><a href="index.html">Фильмы</a><a href="series.html" aria-current="page">Сериалы</a></div>
+  <div class="seg" id="sect"><a href="index.html">Фильмы</a><a href="series.HTML" aria-current="page">Сериалы</a></div>
   <label>Тема оформления</label>
   <div class="seg" id="theme"><button data-t="dark">Темная</button><button data-t="light">Светлая</button></div>
   <div class="trow"><span>Теплый фильтр (для глаз)</span><button class="sw" id="warm" role="switch" aria-checked="false" aria-label="Теплый фильтр (для глаз)"></button></div>
@@ -156,6 +160,7 @@ a.hbtn{display:inline-block;text-decoration:none}
 
 <main>
   <section id="catalog" class="wrap">
+    <nav class="tabs"><a href="index.html">Фильмы</a><a href="series.HTML" aria-current="page">Сериалы</a></nav>
     <p class="count" id="count"></p>
     <div class="grid" id="grid"></div>
   </section>
