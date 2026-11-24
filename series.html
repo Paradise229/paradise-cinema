@@ -36,6 +36,8 @@ header{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr a
 .panel label{display:block;margin:14px 0 6px;font-size:14px;color:#a2a8b6}
 .panel input[type=search]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit}
 .panel input[type=range]{width:100%;accent-color:#f59e0b}
+.panel select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font:inherit}
+.panel select option{color:#111}
 .trow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:14px;color:#f3f4f7}
 .trow small{color:#a2a8b6;font-size:13px}
 .sw{position:relative;flex:none;width:44px;height:24px;padding:0;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);transition:background .2s,border-color .2s}
@@ -73,15 +75,15 @@ a.hbtn{display:inline-block;text-decoration:none}
 @media (max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:20px 12px}.wrap{padding:16px 12px 50px}}
 .card{display:flex;flex-direction:column;gap:8px;text-decoration:none}
 .ct{margin:0;font-size:15px;line-height:1.25;font-weight:700;min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.poster{aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#1b1d24;border:1px solid var(--line);transition:transform .2s,border-color .2s}
+.poster{aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#1b1d24;border:1px solid var(--line);transition:transform .2s,border-color .2s,filter .3s,opacity .3s;position:relative}
 .card:hover .poster{transform:translateY(-3px);border-color:var(--gold)}
-.poster{position:relative}
+.poster img{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .3s,filter .3s}
+.poster.watched img{opacity:0.35;filter:grayscale(80%)}
 .fav{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;font-size:20px;line-height:1;opacity:.5;transition:opacity .2s,color .2s,transform .15s}
 .fav:hover,.fav:focus-visible{opacity:1}
 .fav[aria-pressed=true]{opacity:1;color:#ff4d6d}
 .fav:active{transform:scale(.86)}
 #warm-overlay{position:fixed;inset:0;background-color:rgba(230,160,80,.10);mix-blend-mode:multiply;pointer-events:none;z-index:9999;display:none;transition:opacity .3s ease}
-.poster img{display:block;width:100%;height:100%;object-fit:cover}
 .cover{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;padding:14px;text-align:center;background:linear-gradient(160deg,#23252d,#121317);color:#f3f4f7}
 .cover b{font-size:17px;line-height:1.25}.cover i{font-style:normal;color:var(--gold);font-weight:700}
 .meta{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}
@@ -98,8 +100,11 @@ a.hbtn{display:inline-block;text-decoration:none}
 .ratings{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .ratings span{padding:6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:15px}
 .ratings .kp{color:var(--gold)}
-.watch{background:var(--gold);color:#1a1100;border:0;border-radius:12px;padding:14px 56px;font-size:19px;font-weight:800;box-shadow:0 8px 26px rgba(245,158,11,.35)}
-.watch:hover{background:#fbbf24}
+.watch{background:var(--gold);color:#1a1100;border:0;border-radius:12px;padding:14px 56px;font-size:19px;font-weight:800;box-shadow:0 8px 26px rgba(245,158,11,.35);transition:transform .2s,background .2s}
+.watch:hover{background:#fbbf24;transform:scale(1.02)}
+.watched-btn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:10px 24px;font-size:15px;font-weight:600;transition:all .3s ease;display:flex;align-items:center;gap:8px}
+.watched-btn:hover{border-color:var(--gold);color:var(--text)}
+.watched-btn.is-watched{background:rgba(245,158,11,.1);border-color:var(--gold);color:var(--gold)}
 .recommend{width:100%;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:15px;text-align:left}
 .recommend a{color:var(--gold);font-weight:700;text-decoration:none}
 .recommend a:hover{text-decoration:underline}
@@ -134,6 +139,12 @@ a.hbtn{display:inline-block;text-decoration:none}
   <input type="search" id="q" placeholder="Например, Кухня">
   <label>Жанр</label>
   <div class="chips" id="genres"></div>
+  <label for="wStatus">Статус</label>
+  <select id="wStatus">
+    <option value="all">Все</option>
+    <option value="watched">Только просмотренные</option>
+    <option value="unwatched">Только непросмотренные</option>
+  </select>
   <div class="trow"><span>Только избранное <small id="favCount"></small></span><button class="sw" id="favOnly" role="switch" aria-checked="false" aria-label="Только избранное"></button></div>
   <label for="minKp">Минимальный рейтинг КП: <b id="minV">0</b></label>
   <input type="range" id="minKp" min="0" max="9" step="0.5" value="0">
@@ -166,6 +177,7 @@ a.hbtn{display:inline-block;text-decoration:none}
     <div class="vc">
       <div class="vposter" id="vposter"></div>
       <h1 id="vtitle"></h1>
+      <button class="watched-btn" id="markWatched">Отметить просмотренным</button>
       <div class="ratings" id="vrat"></div>
       <button class="watch" id="watch">Смотреть</button>
       <p id="vdesc"></p>
@@ -185,7 +197,6 @@ a.hbtn{display:inline-block;text-decoration:none}
 <div id="warm-overlay" aria-hidden="true"></div>
 
 <script>
-/* [id, название, год, жанр, КП, IMDb, описание, франшиза или null] */
 const RAW_SERIES=[
 [5304403,"Слово пацана. Кровь на асфальте",2023,"Драма",7.7,7.5,"1988 год, Казань. Школьник вступает в уличную группировку, где свои законы и жестокие правила.",null],
 [7283766,"Айда!",2026,"Криминал",8.2,7.8,"Казань, 1980-е. Молодой парень оказывается втянут в мир группировок.",null],
@@ -294,11 +305,14 @@ const MOVIES=RAW_SERIES.map(r=>({id:r[0],title:r[1],year:r[2],genre:r[3],kp:r[4]
 const $=s=>document.querySelector(s);
 const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const posterUrl=id=>'https://st.kp.yandex.net/images/film_iphone/iphone360_'+id+'.jpg';
-const state={q:'',genre:'',franchise:'',min:0,fav:false};
+const state={q:'',genre:'',min:0,fav:false,wStatus:'all'};
 const FAV_KEY='paradise_favorites_series';
+const WATCH_KEY='paradise_watched_series';
 const favs=new Set((()=>{const a=ls.get(FAV_KEY,[]);return Array.isArray(a)?a.filter(Number.isFinite):[]})());
+const watched=new Set((()=>{const a=ls.get(WATCH_KEY,[]);return Array.isArray(a)?a.filter(Number.isFinite):[]})());
 function updateFavCount(){$('#favCount').textContent=favs.size?'('+favs.size+')':''}
 function toggleFav(id){favs.has(id)?favs.delete(id):favs.add(id);ls.set(FAV_KEY,[...favs]);updateFavCount()}
+function toggleWatched(id){watched.has(id)?watched.delete(id):watched.add(id);ls.set(WATCH_KEY,[...watched])}
 function makeFav(m){
   const b=document.createElement('button');b.type='button';b.className='fav';
   const sync=()=>{const on=favs.has(m.id);b.setAttribute('aria-pressed',String(on));b.textContent=on?'♥':'♡';b.setAttribute('aria-label',on?'Убрать из избранного':'Добавить в избранное')};
@@ -324,7 +338,10 @@ function makePoster(m){
 /* catalog */
 function renderCatalog(){
   const q=state.q.trim().toLowerCase();
-  const list=MOVIES.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(!state.genre||m.genre===state.genre)&&(!state.fav||favs.has(m.id))&&m.kp>=state.min);
+  let list=MOVIES.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(!state.genre||m.genre===state.genre)&&(!state.fav||favs.has(m.id))&&m.kp>=state.min);
+  if(state.wStatus==='watched') list=list.filter(m=>watched.has(m.id));
+  if(state.wStatus==='unwatched') list=list.filter(m=>!watched.has(m.id));
+  
   const grid=$('#grid');grid.innerHTML='';
   $('#count').textContent='Найдено сериалов: '+list.length+' из '+MOVIES.length;
   if(!list.length){
@@ -337,7 +354,8 @@ function renderCatalog(){
   list.forEach(m=>{
     const a=document.createElement('a');a.className='card';a.href='#f'+m.id;
     const h=document.createElement('h3');h.className='ct';h.textContent=m.title;
-    const p=document.createElement('div');p.className='poster';p.appendChild(makePoster(m));p.appendChild(makeFav(m));
+    const p=document.createElement('div');p.className='poster'+(watched.has(m.id)?' watched':'');
+    p.appendChild(makePoster(m));p.appendChild(makeFav(m));
     const meta=document.createElement('div');meta.className='meta';
     meta.innerHTML='<span class="kp">★ '+m.kp.toFixed(1)+' КП</span><span>'+m.genre+'</span>';
     a.append(h,p,meta);frag.appendChild(a);
@@ -356,11 +374,12 @@ function renderGenres(){
     box.appendChild(b);
   });
 }
-function resetFilters(){state.q='';state.genre='';state.min=0;state.fav=false;$('#favOnly').setAttribute('aria-checked','false');$('#q').value='';$('#minKp').value=0;$('#minV').textContent='0';renderGenres();renderCatalog()}
+function resetFilters(){state.q='';state.genre='';state.min=0;state.fav=false;state.wStatus='all';$('#favOnly').setAttribute('aria-checked','false');$('#wStatus').value='all';$('#q').value='';$('#minKp').value=0;$('#minV').textContent='0';renderGenres();renderCatalog()}
 $('#q').oninput=e=>{state.q=e.target.value;renderCatalog()};
 $('#minKp').oninput=e=>{state.min=+e.target.value;$('#minV').textContent=e.target.value;renderCatalog()};
 $('#reset').onclick=resetFilters;
 $('#favOnly').onclick=e=>{state.fav=!state.fav;e.currentTarget.setAttribute('aria-checked',String(state.fav));renderCatalog()};
+$('#wStatus').onchange=e=>{state.wStatus=e.target.value;renderCatalog()};
 
 /* panels */
 const panels=[['#btnF','#pF'],['#btnS','#pS']];
@@ -410,8 +429,8 @@ $('#src1').onclick=()=>{if(current)initPlayer()};
 $('#watch').onclick=()=>$('#player').scrollIntoView({behavior:'smooth',block:'start'});
 $('#back').onclick=()=>{location.hash=''};
 
+/* recommendation */
 function pickRecommendation(m){
-  /* 1) следующая часть франшизы; 2) иначе лучший по КП фильм того же жанра */
   if(m.franchise){
     const parts=MOVIES.filter(x=>x.franchise===m.franchise).sort((a,b)=>a.year-b.year||a.id-b.id);
     const next=parts[parts.findIndex(x=>x.id===m.id)+1];
@@ -428,6 +447,15 @@ function showRecommendation(m){
   const a=document.createElement('a');a.href='#f'+rec.id;a.textContent=rec.title+' ('+rec.year+')';
   box.append(label,a);box.hidden=false;
 }
+
+/* watched btn */
+function updateWatchedBtn(m){
+  const btn=$('#markWatched');
+  const isWatched=watched.has(m.id);
+  btn.textContent=isWatched?'Просмотрено ✓':'Отметить просмотренным';
+  btn.classList.toggle('is-watched',isWatched);
+}
+
 function openMovie(m){
   if(!current)savedY=window.scrollY;
   current=m;
@@ -437,12 +465,19 @@ function openMovie(m){
   $('#vrat').innerHTML='<span class="kp">Кинопоиск '+m.kp.toFixed(1)+'</span><span>IMDb '+m.imdb.toFixed(1)+'</span><span>'+m.year+'</span>';
   $('#vdesc').textContent=m.desc;
   showRecommendation(m);
+  updateWatchedBtn(m);
   document.title=m.title+' — PARADISE CINEMA';
   $('#src2').href='https://reyohoho.github.io/reyohoho/#'+m.id;
   $('#src3').href='https://flcksbr.top/film/'+m.id+'/';
   addRecent(m.id);initPlayer();
   window.scrollTo({top:0,behavior:'instant'});
 }
+$('#markWatched').onclick=()=>{
+  if(!current)return;
+  toggleWatched(current.id);
+  updateWatchedBtn(current);
+  renderCatalog(); 
+};
 function showCatalog(){
   const was=current;current=null;
   $('#player').innerHTML='';
@@ -465,4 +500,4 @@ topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 updateFavCount();renderGenres();renderCatalog();route();
 </script>
 </body>
-</html>
+  </html>
