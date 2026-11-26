@@ -737,6 +737,95 @@ topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 
 updateFavCount();renderGenres();renderFranchises();renderCatalog();route();
 </script>
+<script>
+/* Просмотрено: кнопка на странице фильма, фильтр «Статус», тусклый постер */
+(function(){
+  const KEY='paradise_watched_movies';
+
+  /* повторяющиеся ID: оставляем первую копию, франшизу переносим */
+  const byId=new Map();
+  for(let i=0;i<MOVIES.length;i++){
+    const m=MOVIES[i],k=byId.get(m.id);
+    if(k){if(!k.franchise&&m.franchise)k.franchise=m.franchise;MOVIES.splice(i,1);i--}
+    else byId.set(m.id,m);
+  }
+
+  const saved=ls.get(KEY,[]);
+  const W=new Set(Array.isArray(saved)?saved.filter(Number.isFinite):[]);
+  const save=()=>ls.set(KEY,[...W]);
+  state.status='all';
+
+  const css=document.createElement('style');
+  css.textContent=`
+.card.watched .poster img,.card.watched .poster .cover{opacity:.5}
+.mark{padding:14px 30px;border-radius:14px;border:1.5px solid var(--gold);background:transparent;color:var(--text);font-size:17px;font-weight:600}
+.mark.on{border-color:#6fd39a;color:#6fd39a}`;
+  document.head.appendChild(css);
+
+  /* фильтр «Статус» (перед «Только избранное») */
+  const lab=document.createElement('label');lab.htmlFor='status';lab.textContent='Статус';
+  const sel=document.createElement('select');sel.id='status';
+  [['all','Все'],['watched','Только просмотренные'],['unwatched','Только непросмотренные']].forEach(([v,t])=>{
+    const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);
+  });
+  $('#favOnly').closest('.trow').before(lab,sel);
+  sel.onchange=()=>{state.status=sel.value;renderCatalog()};
+
+  /* кнопка на странице фильма (между названием и оценками) */
+  const mark=document.createElement('button');
+  mark.type='button';mark.id='mark';mark.className='mark';
+  $('#vrat').before(mark);
+  function paint(){
+    if(!current)return;
+    const on=W.has(current.id);
+    mark.classList.toggle('on',on);
+    mark.textContent=on?'✓ Просмотрено':'Отметить просмотренным';
+  }
+  mark.onclick=()=>{
+    if(!current)return;
+    W.has(current.id)?W.delete(current.id):W.add(current.id);
+    save();paint();
+  };
+
+  /* тусклые постеры и фильтр по статусу */
+  function decorate(){
+    const grid=$('#grid');
+    grid.querySelectorAll('.none.st').forEach(n=>n.remove());
+    const cards=[...grid.querySelectorAll('.card')];
+    let shown=0;
+    cards.forEach(a=>{
+      const id=+a.getAttribute('href').slice(2);
+      const done=W.has(id);
+      a.classList.toggle('watched',done);
+      const hide=(state.status==='watched'&&!done)||(state.status==='unwatched'&&done);
+      a.hidden=hide;
+      if(!hide)shown++;
+    });
+    if(!cards.length)return;
+    $('#count').textContent='Найдено фильмов: '+shown+' из '+MOVIES.length;
+    if(shown){grid.style.display='';return}
+    grid.style.display='block';
+    const d=document.createElement('div');d.className='none st';
+    d.innerHTML=(state.status==='watched'?'Пока нет просмотренных фильмов.':'Все фильмы уже просмотрены.')+'<br><button type="button">Сбросить фильтры</button>';
+    d.querySelector('button').onclick=resetFilters;
+    grid.appendChild(d);
+  }
+
+  /* подключаемся к существующим функциям */
+  const baseRender=renderCatalog;
+  renderCatalog=function(){baseRender();decorate()};
+  const baseOpen=openMovie;
+  openMovie=function(m){baseOpen(m);paint()};
+  const baseShow=showCatalog;
+  showCatalog=function(){baseShow();decorate()};
+  const baseReset=resetFilters;
+  resetFilters=function(){baseReset();state.status='all';sel.value='all';decorate()};
+  $('#reset').onclick=resetFilters;
+
+  renderCatalog();
+  paint();
+})();
+</script>  
 </body>
 </html>
 
