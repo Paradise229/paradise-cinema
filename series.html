@@ -529,13 +529,13 @@ $('#shuffleBtn').onclick = () => {
       MOVIES.push(...originalMovies);
     }
     
-    btn.textContent = '↺ Вернуть как было';
+    btn.textContent = 'Вернуть как было';
     btn.style.color = 'var(--text)';
     btn.style.borderColor = 'var(--line)';
     isShuffled = true;
   } else {
     renderCatalog();
-    btn.textContent = '🔀 Перемешать';
+    btn.textContent = 'Перемешать';
     btn.style.color = 'var(--gold)';
     btn.style.borderColor = 'var(--gold)';
     isShuffled = false;
