@@ -167,7 +167,7 @@ a.hbtn{display:inline-block;text-decoration:none}
   <button class="link" id="clearRecent">Очистить список</button>
 </div>
 
-<button id="top" aria-label="Наверх">↑ Наверх</button>
+<button id="top" aria-label="Наверх"> Наверх</button>
 
 <main>
   <section id="catalog" class="wrap">
@@ -180,7 +180,7 @@ a.hbtn{display:inline-block;text-decoration:none}
   </section>
 
   <section id="view" class="wrap" hidden>
-    <button class="back" id="back">← Назад в каталог</button>
+    <button class="back" id="back"> Назад в каталог</button>
     <div class="vc">
       <div class="vposter" id="vposter"></div>
       <h1 id="vtitle"></h1>
@@ -452,7 +452,7 @@ function showRecommendation(m){
   const box=$('#recommend'),rec=pickRecommendation(m);
   if(!rec){box.hidden=true;box.innerHTML='';return}
   box.innerHTML='';
-  const label=document.createElement('span');label.textContent='🎬 Рекомендуем посмотреть: ';
+  const label=document.createElement('span');label.textContent=' Рекомендуем посмотреть: ';
   const a=document.createElement('a');a.href='#f'+rec.id;a.textContent=rec.title+' ('+rec.year+')';
   box.append(label,a);box.hidden=false;
 }
@@ -461,7 +461,7 @@ function showRecommendation(m){
 function updateWatchedBtn(m){
   const btn=$('#markWatched');
   const isWatched=watched.has(m.id);
-  btn.textContent=isWatched?'Просмотрено ✓':'Отметить просмотренным';
+  btn.textContent=isWatched?'Просмотрено ':'Отметить просмотренным';
   btn.classList.toggle('is-watched',isWatched);
 }
 
@@ -529,13 +529,13 @@ $('#shuffleBtn').onclick = () => {
       MOVIES.push(...originalMovies);
     }
     
-    btn.textContent = 'Вернуть как было';
+    btn.textContent = ' Вернуть как было';
     btn.style.color = 'var(--text)';
     btn.style.borderColor = 'var(--line)';
     isShuffled = true;
   } else {
     renderCatalog();
-    btn.textContent = 'Перемешать';
+    btn.textContent = ' Перемешать';
     btn.style.color = 'var(--gold)';
     btn.style.borderColor = 'var(--gold)';
     isShuffled = false;
