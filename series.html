@@ -121,6 +121,10 @@ a.hbtn{display:inline-block;text-decoration:none}
 .adnote b{display:block;color:var(--text);margin-bottom:4px}
 .adnote a{color:var(--gold);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+
+/* Shuffle button styles */
+#shuffleBtn { transition: background .2s, border-color .2s, color .2s; }
+#shuffleBtn:hover { background: rgba(245,158,11,.1) !important; }
 </style>
 </head>
 <body>
@@ -168,7 +172,10 @@ a.hbtn{display:inline-block;text-decoration:none}
 <main>
   <section id="catalog" class="wrap">
     <nav class="tabs"><a href="index.html">Фильмы</a><a href="series.html" aria-current="page">Сериалы</a></nav>
-    <p class="count" id="count"></p>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+      <p class="count" id="count" style="margin:0;"></p>
+      <button id="shuffleBtn" class="hbtn" style="background:none; color:var(--gold); border:1px solid var(--gold); font-size:14px; padding:6px 12px;">🔀 Перемешать</button>
+    </div>
     <div class="grid" id="grid"></div>
   </section>
 
@@ -342,6 +349,8 @@ function renderCatalog(){
   if(state.wStatus==='watched') list=list.filter(m=>watched.has(m.id));
   if(state.wStatus==='unwatched') list=list.filter(m=>!watched.has(m.id));
   
+  window.currentFilteredList = [...list];
+
   const grid=$('#grid');grid.innerHTML='';
   $('#count').textContent='Найдено сериалов: '+list.length+' из '+MOVIES.length;
   if(!list.length){
@@ -497,7 +506,43 @@ const topBtn=$('#top');
 window.addEventListener('scroll',()=>topBtn.classList.toggle('show',window.scrollY>300),{passive:true});
 topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 
+/* Перемешать каталог */
+let isShuffled = false;
+
+$('#shuffleBtn').onclick = () => {
+  const btn = $('#shuffleBtn');
+  
+  if (!isShuffled) {
+    if (window.currentFilteredList) {
+      const shuffled = [...window.currentFilteredList];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      
+      const originalMovies = [...MOVIES];
+      MOVIES.length = 0;
+      MOVIES.push(...shuffled);
+      renderCatalog();
+      
+      MOVIES.length = 0;
+      MOVIES.push(...originalMovies);
+    }
+    
+    btn.textContent = '↺ Вернуть как было';
+    btn.style.color = 'var(--text)';
+    btn.style.borderColor = 'var(--line)';
+    isShuffled = true;
+  } else {
+    renderCatalog();
+    btn.textContent = '🔀 Перемешать';
+    btn.style.color = 'var(--gold)';
+    btn.style.borderColor = 'var(--gold)';
+    isShuffled = false;
+  }
+};
+
 updateFavCount();renderGenres();renderCatalog();route();
 </script>
 </body>
-  </html>
+</html>
