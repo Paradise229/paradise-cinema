@@ -827,6 +827,57 @@ updateFavCount();renderGenres();renderFranchises();renderCatalog();route();
   renderCatalog();
   paint();
 })();
+</script> 
+<script>
+/* Перемешать каталог: перемешиваются только карточки, прошедшие фильтры */
+(function(){
+  const css=document.createElement('style');
+  css.textContent='#shuffleBtn{transition:background .2s,border-color .2s,color .2s}#shuffleBtn:hover{background:rgba(245,158,11,.1)!important}';
+  document.head.appendChild(css);
+
+  const count=$('#count');
+  const row=document.createElement('div');
+  row.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px';
+  count.parentNode.insertBefore(row,count);
+  count.style.margin='0';
+  const btn=document.createElement('button');
+  btn.type='button';btn.id='shuffleBtn';btn.className='hbtn';
+  btn.style.cssText='background:none;color:var(--gold);border:1px solid var(--gold);font-size:14px;padding:6px 12px';
+  btn.textContent='Перемешать';
+  row.append(count,btn);
+
+  let rank=null;
+  function applyOrder(){
+    if(!rank)return;
+    const grid=$('#grid');
+    const idOf=c=>+c.getAttribute('href').slice(2);
+    const cards=[...grid.querySelectorAll('.card')];
+    cards.sort((a,b)=>rank.get(idOf(a))-rank.get(idOf(b)));
+    cards.forEach(c=>grid.appendChild(c));
+  }
+  const baseRender=renderCatalog;
+  renderCatalog=function(){baseRender();applyOrder()};
+
+  btn.onclick=()=>{
+    if(!rank){
+      const ids=MOVIES.map(m=>m.id);
+      for(let i=ids.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [ids[i],ids[j]]=[ids[j],ids[i]];
+      }
+      rank=new Map(ids.map((id,i)=>[id,i]));
+      btn.textContent='Вернуть как было';
+      btn.style.color='var(--text)';
+      btn.style.borderColor='var(--line)';
+    }else{
+      rank=null;
+      btn.textContent='Перемешать';
+      btn.style.color='var(--gold)';
+      btn.style.borderColor='var(--gold)';
+    }
+    renderCatalog();
+  };
+})();
 </script>  
 </body>
 </html>
